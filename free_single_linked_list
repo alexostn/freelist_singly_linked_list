@@ -1,0 +1,77 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct myStructure
+{
+	int myNum;
+	char myLetter;
+	struct myStructure *next;
+} t_list;
+
+void freeList(t_list *s1)
+{
+	t_list *s2;
+
+	while (s1 != NULL)
+	{
+		s2 = s1->next;
+		free(s1);
+		s1 = s2;
+	}
+}
+
+int main()
+{
+	// Динамическое выделение памяти для трех узлов
+	t_list *s1 = (t_list *)malloc(sizeof(t_list));
+	t_list *s2 = (t_list *)malloc(sizeof(t_list));
+	t_list *s3 = (t_list *)malloc(sizeof(t_list));
+
+	// Проверка успешности выделения памяти
+	if (s1 == NULL || s2 == NULL || s3 == NULL)
+	{
+		printf("Ошибка выделения памяти\n");
+		// Освобождение уже выделенной памяти в случае ошибки
+		if (s3 != NULL) free(s3);
+		if (s2 != NULL) free(s2);
+		if (s1 != NULL) free(s1);
+		return 1;
+	}
+
+	// Присвоение значений членам s1
+	s1->myNum = 13;
+	s1->myLetter = 'B';
+	s1->next = s2;  // Указатель next структуры s1 указывает на s2
+
+	// Присвоение значений членам s2
+	s2->myNum = 42;
+	s2->myLetter = 'C';
+	s2->next = s3;  // Указатель next структуры s2 указывает на s3
+
+	// Присвоение значений членам s3
+	s3->myNum = 99;
+	s3->myLetter = 'D';
+	s3->next = NULL;  // Конец списка
+
+	// Вывод значений s1
+	printf("s1 - My number: %d\n", s1->myNum);
+	printf("s1 - My letter: %c\n", s1->myLetter);
+
+	// Вывод значений структуры, на которую указывает s1->next (т.е. s2)
+	printf("s1->next - My number: %d\n", s1->next->myNum);
+	printf("s1->next - My letter: %c\n", s1->next->myLetter);
+
+	// Вывод значений структуры, на которую указывает s2->next (т.е. s3)
+	printf("s2->next - My number: %d\n", s2->next->myNum);
+	printf("s2->next - My letter: %c\n", s2->next->myLetter);
+
+	// Вывод значений структуры s3 непосредственно через s3
+	printf("s3 - My number: %d\n", s3->myNum);
+	printf("s3 - My letter: %c\n", s3->myLetter);
+
+	// Освобождение выделенной памяти для всех узлов
+	freeList(s1);
+
+	return 0;
+}
+
